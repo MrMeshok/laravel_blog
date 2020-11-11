@@ -15,8 +15,8 @@ use App\Http\Controllers\ProfileController;
 */
 Route::view('', 'welcome');
 
-Route::get('/profile/{id}', [ProfileController::class, 'profile_view']);
+Route::get('/profile/{id}', [ProfileController::class, 'profile_view'])->middleware('auth');
 
-Route::post('profile/add_comment', [ProfileController::class, 'comments']);
+Route::post('profile/add_comment', [CommentController::class, 'comments'])->middleware('auth');
 // Route::view('profile', 'home');
 // Route::view('home', 'home')->middleware('auth');

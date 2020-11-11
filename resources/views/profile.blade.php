@@ -18,24 +18,44 @@
                 </div>
             </div>
             <div class="card">
+                    {{-- {{var_dump($comments->author())}} --}}
                 <div class="card-header">Комментарии</div>
                 <div class="card-body">
-                    {{-- {{var_dump($comments->author())}} --}}
                     @foreach ($comments as $element)
                         <div>
+                            @php
+                                $replay = $element->replays;
+                            @endphp
+                            @if (count($replay) > 0)
+                                Ответ на <br>
+                                <div class="reply" style="background-color: grey;">
+                                    {{-- @if (condition) --}}
+                                        {{mb_strimwidth($replay[0]->message, 0, 50, "...")}}
+                                    {{-- @else --}}
+                                        {{-- false expr --}}
+                                    {{-- @endif --}}
+                                </div>
+                            @endif
                             <h3>{{$element->subject}}</h3>
-                            <h5>
+                            <h5>{{$author = $element->author->name}}</h5>
                                 @php
-                                    $author = DB::table('users')->where('id', $element->author_id)->first();
-                                    echo $author->name;
+                                    // $author = DB::table('users')->where('id', $element->author_id)->first();
+                                    // echo $author->name;
+                                    // $author = $user->find($element->author_id)->Author;
+                                    // $author = $element->find($element->id)->Author;
+                                    // echo $author->name;
+                                    // var_dump($author);
+                                    // echo $author->name;
                                 @endphp
-                            </h5><br>
+                            <br>
                             <p>{{$element->message}}</p>
+                            <div class="control">
+                                <button name="not_done" value="" form="control">Удалить</button>
+                                <button name="not_done" value="" form="control">Ответить</button>
+                            </div>
                             <hr>
-
                         </div>
                     @endforeach
-                </div>
             </div>
             <div class="card">
                 <div class="card-header">Оставить комментарий</div>

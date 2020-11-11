@@ -11,6 +11,15 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    public function Profile()
+    {
+        return $this->hasMany('App\Models\Comment', 'profile_id', 'id');
+    }
+    public function Author()
+    {
+        return $this->hasMany('App\Models\Comment', 'author_id', 'id');
+    }
+
     /**
      * The attributes that are mass assignable.
      *
