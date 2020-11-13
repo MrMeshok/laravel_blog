@@ -16,13 +16,18 @@ use App\Http\Controllers\HomeController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-// Route::get('', [HomeController::class, 'redirect']);
+Route::get('', [HomeController::class, 'redirect']);
 // Route::get('{foo}', function ($foo) {
 //     return $foo;
 // });
 Route::get('profile', [HomeController::class, 'redirect']);
+Route::get('HOME', [HomeController::class, 'redirect']);
 
 Route::get('/profile/{id}/', [ProfileController::class, 'profile_view']);
+Route::get('/users', [ProfileController::class, 'all_users']);
+
+Route::get('/user_comments', [CommentController::class, 'user_comments'])->middleware('auth');
+
 
 Route::post('profile/add_comment', [CommentController::class, 'Add_comment'])->middleware('auth');
 Route::get('profile/all_comments/{id}', [CommentController::class, 'all_comments']);

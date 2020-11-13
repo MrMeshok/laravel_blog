@@ -11,11 +11,11 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    public function Profile()
+    public function comments_for_profile()
     {
         return $this->hasMany('App\Models\Comment', 'profile_id', 'id');
     }
-    public function Author()
+    public function comments_for_author()
     {
         return $this->hasMany('App\Models\Comment', 'author_id', 'id');
     }
