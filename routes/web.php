@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\HomeController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -13,10 +16,17 @@ use App\Http\Controllers\ProfileController;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::view('', 'welcome');
+// Route::get('', [HomeController::class, 'redirect']);
+// Route::get('{foo}', function ($foo) {
+//     return $foo;
+// });
+Route::get('profile', [HomeController::class, 'redirect']);
 
-Route::get('/profile/{id}', [ProfileController::class, 'profile_view'])->middleware('auth');
+Route::get('/profile/{id}/', [ProfileController::class, 'profile_view']);
 
-Route::post('profile/add_comment', [CommentController::class, 'comments'])->middleware('auth');
-// Route::view('profile', 'home');
-// Route::view('home', 'home')->middleware('auth');
+Route::post('profile/add_comment', [CommentController::class, 'Add_comment'])->middleware('auth');
+Route::get('profile/all_comments/{id}', [CommentController::class, 'all_comments']);
+Route::get('profile/{profile_id}/del_comment/{id}', [CommentController::class, 'del_comment'])->middleware('auth');
+
+// Route::post('profile/add_reply', [CommentController::class, 'Add_reply'])->middleware('auth');
+

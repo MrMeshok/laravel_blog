@@ -27,7 +27,7 @@ class Comment extends Model
         return $this->belongsTo('App\Models\User', 'profile_id', 'id');
     }
 
-    public function replays(){
+    public function replies(){
        return $this->hasMany('App\Models\Comment' ,'id', 'reply_id');
    }
 }
