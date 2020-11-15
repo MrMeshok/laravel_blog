@@ -15,9 +15,15 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Models\Comment', 'profile_id', 'id');
     }
+
     public function comments_for_author()
     {
         return $this->hasMany('App\Models\Comment', 'author_id', 'id');
+    }
+    
+    public function books()
+    {
+        return $this->hasMany('App\Models\Book', 'user_id', 'id');
     }
 
     /**

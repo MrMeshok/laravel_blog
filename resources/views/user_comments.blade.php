@@ -5,7 +5,6 @@
 	<div class="row justify-content-center">
 		<div class="col-md-12">
 			<div class="card">
-					{{-- {{var_dump($comments->author())}} --}}
 				<div class="card-header">Комментарии</div>
 				<div class="card-body card-body-comments">
 					@foreach ($comments as $element)
