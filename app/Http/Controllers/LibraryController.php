@@ -10,21 +10,22 @@ use Illuminate\Support\Facades\Auth;
 
 class LibraryController extends Controller
 {
-    public function library($id)
+    public function library($user_id)
     {
-        if (Auth::user()) {
-            $user = Auth::user();
-        } else {
-            $user = NULL;
-        }
+        $user = Auth::user();
         $url = url()->current();
-        $profile = User::where('id', $id)->get()->first();
-        $books = Book::where('user_id', $id)->get();
 
-        return view('library', ['profile' => $profile, 'books' => $books, 'user' => $user, 'url' => $url]);
+        $profile = User::where('id', $user_id)->get()->first();
+        $books = Book::where('user_id', $user_id)->get();
+
+        if ($profile and $books) {
+            return view('library', ['profile' => $profile, 'books' => $books, 'user' => $user, 'url' => $url]);
+        } else {
+            return redirect('');
+        }
     }
 
-    public function read_book($id, $book_id)
+    public function read_book($user_id, $book_id)
     {
         $book = Book::where('id', $book_id)->get()->first();
         return view('book')->with('book', $book);
@@ -38,17 +39,17 @@ class LibraryController extends Controller
             'id' => 'required|integer|exists:books,id',
         ]);
         $book = Book::find($request->input('id'));
-        $book->title = $request->input('title');
-        $book->text = $request->input('text');
-        $book->save();
+        if (Auth::user()->id == $book->user_id) {
+            $book->title = $request->input('title');
+            $book->text = $request->input('text');
+            $book->save();
+        }
         return redirect()->back();
     }
 
-    public function del_book($id, $book_id)
+    public function del_book($user_id, $book_id)
     {
-        if (Auth::user()->id == $id) {
-            $book = Book::where('id', $book_id)->delete();
-        }
+        $book = Book::where('id', $book_id)->where('user_id', Auth::user()->id)->delete();
         return redirect()->back();
     }
 
@@ -71,26 +72,28 @@ class LibraryController extends Controller
         return redirect()->back();
     }
 
-    public function change_public($id)
+    public function change_public($user_id)
     {
-        if (Auth::user()->id == $id) {
-            $library = User::find($id);
+        if (Auth::user()->id == $user_id) {
+            $library = User::find($user_id);
             $library->public_library ^= 1;
             $library->save();
         }
         return redirect()->back();
     }
 
-    public function share_library($profile_id)
+    public function share_library($user_id)
     {
-        $shared_libraries = Shared_libraries::where('library_id', $profile_id)->where('user_id', Auth::user()->id)->get()->first();
-        if ($shared_libraries) {
-            Shared_libraries::where('library_id', $profile_id)->where('user_id', Auth::user()->id)->delete();
-        } else {
-            $share = new Shared_libraries();
-            $share->library_id = $profile_id;
-            $share->user_id = Auth::user()->id;
-            $share->save();
+        if (User::find($user_id)) {
+            $shared_libraries = Shared_libraries::where('library_id', $user_id)->where('user_id', Auth::user()->id)->get()->first();
+            if ($shared_libraries) {
+                Shared_libraries::where('library_id', $user_id)->where('user_id', Auth::user()->id)->delete();
+            } else {
+                $share = new Shared_libraries();
+                $share->library_id = $user_id;
+                $share->user_id = Auth::user()->id;
+                $share->save();
+            }
         }
         return redirect()->back();
     }

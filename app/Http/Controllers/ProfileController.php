@@ -11,19 +11,19 @@ use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
-    public function profile_view($id)
+    public function profile_view($user_id)
     {
-        $user = User::where('id', $id)->get()->first();
+        $user = User::where('id', $user_id)->get()->first();
 
-        $comments = Comment::where('profile_id', $id)->get();
-        // $comments = User::find($id)->comments_for_profile()->get();
+        $comments = Comment::where('profile_id', $user_id)->get();
+        // $comments = User::find($user_id)->comments_for_profile()->get();
 
         $auth = Auth::user();
         $url = url()->current();
-        $library_access = Shared_libraries::where('library_id', $id)->where('user_id', $auth->id)->get()->first();
+        $library_access = Shared_libraries::where('library_id', $user_id)->where('user_id', $auth->id)->get()->first();
         // Comment::find(1)->replays
         // dd(Comment::find(2)->Author);
-        // dd(Comment::find($id)->Author);
+        // dd(Comment::find($user_id)->Author);
 
         if ($user) {
             return view('profile', ['user' => $user, 'comments' => $comments, 'auth' => $auth, 'url' => $url, 'library_access' => $library_access]);

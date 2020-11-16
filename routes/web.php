@@ -24,23 +24,23 @@ Route::get('', [HomeController::class, 'redirect']);
 Route::get('profile', [HomeController::class, 'redirect']);
 Route::get('HOME', [HomeController::class, 'redirect']);
 
-Route::get('/profile/{id}/', [ProfileController::class, 'profile_view']);
+Route::get('/profile/{user_id}/', [ProfileController::class, 'profile_view']);
 Route::get('/users', [ProfileController::class, 'all_users']);
 
 Route::get('/user_comments', [CommentController::class, 'user_comments'])->middleware('auth');
 
-Route::get('/library/{id}', [LibraryController::class, 'library'])->middleware('ShareableLibrary');
-Route::get('/library/{id}/{book_id}', [LibraryController::class, 'read_book'])->middleware('ShareableLibrary');
-Route::get('/library/{id}/change_public', [LibraryController::class, 'change_public'])->middleware('auth');
-Route::post('/library/{id}/add_book', [LibraryController::class, 'add_book'])->middleware('auth');
-Route::get('/profile/{profile_id}/share_library', [LibraryController::class, 'share_library'])->middleware('auth');
-Route::get('/library/{id}/{book_id}/del_book', [LibraryController::class, 'del_book'])->middleware('auth');
-Route::post('/library/{id}/{book_id}/edit_book', [LibraryController::class, 'edit_book'])->middleware('auth');
+Route::get('/library/{user_id}', [LibraryController::class, 'library'])->middleware('ShareableLibrary');
+Route::get('/library/{user_id}/{book_id}', [LibraryController::class, 'read_book'])->middleware('ShareableLibrary');
+Route::get('/library/{user_id}/change_public', [LibraryController::class, 'change_public'])->middleware('auth');
+Route::post('/library/{user_id}/add_book', [LibraryController::class, 'add_book'])->middleware('auth');
+Route::get('/profile/{user_id}/share_library', [LibraryController::class, 'share_library'])->middleware('auth');
+Route::get('/library/{user_id}/{book_id}/del_book', [LibraryController::class, 'del_book'])->middleware('auth');
+Route::post('/library/{user_id}/{book_id}/edit_book', [LibraryController::class, 'edit_book'])->middleware('auth');
 
 
 Route::post('/profile/add_comment', [CommentController::class, 'Add_comment'])->middleware('auth');
-Route::get('/profile/all_comments/{id}', [CommentController::class, 'all_comments']);
-Route::get('/profile/{profile_id}/del_comment/{id}', [CommentController::class, 'del_comment'])->middleware('auth');
+Route::get('/profile/all_comments/{user_id}', [CommentController::class, 'all_comments']);
+Route::get('/profile/del_comment/{id}', [CommentController::class, 'del_comment'])->middleware('auth');
 
 // Route::post('profile/add_reply', [CommentController::class, 'Add_reply'])->middleware('auth');
 

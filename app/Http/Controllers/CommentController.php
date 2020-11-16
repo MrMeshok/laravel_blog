@@ -10,65 +10,74 @@ use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
-	public function Add_comment(Request $request)
-	{
-		$valid = $request->validate([
-			'subject' => 'required|min:5|max:100',
-			'message' => 'required|min:5|max:300',
-			'profile_id' => 'required|integer|exists:users,id',
-		]);
+    public function Add_comment(Request $request)
+    {
+        $valid = $request->validate([
+            'subject' => 'required|min:5|max:100',
+            'message' => 'required|min:5|max:300',
+            'profile_id' => 'required|integer|exists:users,id',
+        ]);
 
-		$comment = new Comment();
-		$comment->author_id = Auth::user()->id;
-		$comment->profile_id = $request->input('profile_id');
-		if ($request->input('reply_id')) {
-			$comment->reply_id = $request->input('reply_id');
-		}
-		$comment->subject = $request->input('subject');
-		$comment->message = $request->input('message');
+        $comment = new Comment();
+        $comment->author_id = Auth::user()->id;
+        $comment->profile_id = $request->input('profile_id');
+        if ($request->input('reply_id')) {
+            $comment->reply_id = $request->input('reply_id');
+        }
+        $comment->subject = $request->input('subject');
+        $comment->message = $request->input('message');
 
-		$comment->save();
-		return redirect()->back();
-	}
+        $comment->save();
+        return redirect()->back();
+    }
 
-	public function del_comment($profile_id, $id)
-	{
-		DB::statement('SET FOREIGN_KEY_CHECKS=0');
-		$user_id = Auth::user()->id;
-		if ($user_id == $profile_id) {
-			Comment::where('profile_id', $profile_id)->where('id', $id)->delete();
-		} else {
-			Comment::where('profile_id', $profile_id)->where('author_id', $user_id)->where('id', $id)->delete();
-		}
-		DB::statement('SET FOREIGN_KEY_CHECKS=1');
-		
-		return redirect()->back();
-	}
-	public function all_comments($profile_id)
-	{
-		$auth = Auth::user();
-		$user = User::where('id', $profile_id)->get()->first();
-		$url = url()->current();
+    public function del_comment($id)
+    {
+        // DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        $comment = Comment::find($id);
+        $user_id = Auth::user()->id;
+        // dd($comment);
+        if ($comment->author_id == $user_id or $comment->profile_id == $user_id) {
+            $comment->delete();
+        }
+        // $auth_user_id = Auth::user()->id;
+        // if ($auth_user_id == $user_id) {
+        //     // Удаление комментариев из своего профиля
+        //     Comment::where('profile_id', $user_id)->where('id', $id)->delete();
+        // } else {
+        //     // Удаление комментариев за своим авторством
+        //     Comment::where('author_id', $auth_user_id)->where('id', $id)->delete();
+        // }
+        
+        // DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        // return redirect()->back();
+    }
 
-		$count = Comment::where('profile_id', $profile_id)->count();
-		$skip = 5;
-		$limit = $count - $skip;
-		$comments = Comment::where('profile_id', $profile_id)->skip($skip)->take($limit)->get();;
-		// $comments = Comment::where('profile_id', $profile_id)->skip(5)->take(PHP_INT_MAX)->get();;
+    public function all_comments($user_id)
+    {
+        $auth = Auth::user();
+        $user = User::where('id', $user_id)->get()->first();
+        $url = url()->current();
 
-		// return view('profile_rest_comments')->with(['user' => $user, 'comments' => $comments, 'auth' => $auth, 'url' => $url])->render();
-		$new_comments = view('profile_rest_comments', ['user' => $user, 'comments' => $comments, 'auth' => $auth, 'url' => $url])->render();
+        $count = Comment::where('profile_id', $user_id)->count();
+        $skip = 5;
+        $limit = $count - $skip;
+        $comments = Comment::where('profile_id', $user_id)->skip($skip)->take($limit)->get();;
+        // $comments = Comment::where('profile_id', $user_id)->skip(5)->take(PHP_INT_MAX)->get();;
 
-		// return json_encode($comments);
-		// return dump($comments);
-		return response()->json($new_comments);
-	}
+        // return view('profile_rest_comments')->with(['user' => $user, 'comments' => $comments, 'auth' => $auth, 'url' => $url])->render();
+        $new_comments = view('profile_rest_comments', ['user' => $user, 'comments' => $comments, 'auth' => $auth, 'url' => $url])->render();
 
-	public function user_comments()
-	{
+        // return json_encode($comments);
+        // return dump($comments);
+        return response()->json($new_comments);
+    }
 
-		$comments = Comment::where('author_id', Auth::user()->id)->get();
+    public function user_comments()
+    {
 
-		return view('user_comments', ['comments' => $comments]);
-	}
+        $comments = Comment::where('author_id', Auth::user()->id)->get();
+
+        return view('user_comments', ['comments' => $comments]);
+    }
 }
