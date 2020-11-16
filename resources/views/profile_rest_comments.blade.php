@@ -19,7 +19,7 @@
         @if ($auth)
             <div class="control">
                 @if ($auth->id == $element->author_id or $auth->id == $element->profile_id)
-                    <a class="btn btn-danger" href="{{$element->profile_id}}/del_comment/{{$element->id}}">Удалить</a>
+                    <a class="btn btn-danger" href="/profile/del_comment/{{$element->id}}">Удалить</a>
                 @endif
                 <button id="{{$element->id}}" class="reply_button btn btn-primary" value="">Ответить</button>
                 <form class="reply_form hidden" id="reply_form_{{$element->id}}" action="/profile/add_comment" method="POST">

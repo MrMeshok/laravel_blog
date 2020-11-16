@@ -20,7 +20,7 @@ class ProfileController extends Controller
 
         $auth = Auth::user();
         $url = url()->current();
-        $library_access = Shared_libraries::where('library_id', $user_id)->where('user_id', $auth->id)->get()->first();
+        $library_access = Shared_libraries::where('library_id', $auth->id)->where('user_id', $user_id)->get()->first();
         // Comment::find(1)->replays
         // dd(Comment::find(2)->Author);
         // dd(Comment::find($user_id)->Author);

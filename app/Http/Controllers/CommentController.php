@@ -33,24 +33,17 @@ class CommentController extends Controller
 
     public function del_comment($id)
     {
-        // DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+
         $comment = Comment::find($id);
-        $user_id = Auth::user()->id;
-        // dd($comment);
-        if ($comment->author_id == $user_id or $comment->profile_id == $user_id) {
+        $user = Auth::user();
+        if ($comment) {
+            if ($comment->author_id == $user->id or $comment->profile_id == $user->id) {
             $comment->delete();
+            }
         }
-        // $auth_user_id = Auth::user()->id;
-        // if ($auth_user_id == $user_id) {
-        //     // Удаление комментариев из своего профиля
-        //     Comment::where('profile_id', $user_id)->where('id', $id)->delete();
-        // } else {
-        //     // Удаление комментариев за своим авторством
-        //     Comment::where('author_id', $auth_user_id)->where('id', $id)->delete();
-        // }
-        
-        // DB::statement('SET FOREIGN_KEY_CHECKS=1');
-        // return redirect()->back();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
+        return redirect()->back();
     }
 
     public function all_comments($user_id)

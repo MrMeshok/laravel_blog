@@ -74,6 +74,7 @@ class LibraryController extends Controller
 
     public function change_public($user_id)
     {
+        // dd($user_id);
         if (Auth::user()->id == $user_id) {
             $library = User::find($user_id);
             $library->public_library ^= 1;
@@ -85,13 +86,13 @@ class LibraryController extends Controller
     public function share_library($user_id)
     {
         if (User::find($user_id)) {
-            $shared_libraries = Shared_libraries::where('library_id', $user_id)->where('user_id', Auth::user()->id)->get()->first();
+            $shared_libraries = Shared_libraries::where('library_id', Auth::user()->id)->where('user_id', $user_id)->get()->first();
             if ($shared_libraries) {
-                Shared_libraries::where('library_id', $user_id)->where('user_id', Auth::user()->id)->delete();
+                Shared_libraries::where('library_id', Auth::user()->id)->where('user_id', $user_id)->delete();
             } else {
                 $share = new Shared_libraries();
-                $share->library_id = $user_id;
-                $share->user_id = Auth::user()->id;
+                $share->library_id = Auth::user()->id;
+                $share->user_id = $user_id;
                 $share->save();
             }
         }

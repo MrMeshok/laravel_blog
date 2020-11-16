@@ -29,8 +29,8 @@ Route::get('/users', [ProfileController::class, 'all_users']);
 
 Route::get('/user_comments', [CommentController::class, 'user_comments'])->middleware('auth');
 
+Route::get('/library/{user_id}/{book_id}/read', [LibraryController::class, 'read_book'])->middleware('ShareableLibrary');
 Route::get('/library/{user_id}', [LibraryController::class, 'library'])->middleware('ShareableLibrary');
-Route::get('/library/{user_id}/{book_id}', [LibraryController::class, 'read_book'])->middleware('ShareableLibrary');
 Route::get('/library/{user_id}/change_public', [LibraryController::class, 'change_public'])->middleware('auth');
 Route::post('/library/{user_id}/add_book', [LibraryController::class, 'add_book'])->middleware('auth');
 Route::get('/profile/{user_id}/share_library', [LibraryController::class, 'share_library'])->middleware('auth');

@@ -29,9 +29,9 @@
                     @foreach ($books as $book)
                         <div class="user">
                             <div class="name">{{$book->title}}</div>
-                            <a class="btn btn-primary" href="{{$url}}/{{$book->id}}">Прочитать</a>
+                            <a class="btn btn-primary" href="{{$url}}/{{$book->id}}/read">Прочитать</a>
                             @if ($user->id == $profile->id)
-                                <a id="edit_book" class="btn btn-primary">Редактировать</a>
+                                <a class="btn btn-primary edit_book">Редактировать</a>
                                 <a class="btn btn-danger" href="{{$url}}/{{$book->id}}/del_book">Удалить</a>
                                 <form class="hidden" action="{{$url}}/{{$book->id}}/edit_book" method="POST">
                                     @csrf
